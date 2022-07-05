@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "975937692589",
+    "project_id": "tsn-hitnes",
+    "storage_bucket": "tsn-hitnes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975937692589:android:a31c4ce3f9fefcce28b724",
+        "android_client_info": {
+          "package_name": "com.tsn.tsn_technical_hitnes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975937692589-cu5abca6fvmhr73n8bu3nmr38kb6qba4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHcET1P17xcsTaFR4nKNq_5wQgvjVknJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975937692589-cu5abca6fvmhr73n8bu3nmr38kb6qba4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
