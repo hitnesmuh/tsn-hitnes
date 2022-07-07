@@ -1,98 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:tsn_technical_hitnes/cubit/size_cubit.dart';
 import 'package:tsn_technical_hitnes/shared/theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SizeItem extends StatelessWidget {
-  final int status;
   final String name;
+  final bool isAvailable;
+  final String id;
 
   const SizeItem({
     Key? key,
-    required this.status,
     required this.name,
+    this.isAvailable = true,
+    required this.id,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool isSelected = context.watch<SizeCubit>().isSelected(id);
+
     kBackgroundColor() {
-      switch (status) {
-        case 0:
-          return kWhiteColor;
-        case 1:
+      if (!isAvailable) {
+        return kUnavailableColor;
+      } else {
+        if (isSelected) {
+          return kPrimaryColor;
+        } else {
           return kAvailableColor;
-        case 2:
-          return kUnavailableColor;
-        default:
-          return kGreyColor;
+        }
       }
     }
 
     borderColor() {
-      switch (status) {
-        case 0:
-          return kBlackColor;
-        case 1:
-          return kPrimaryColor;
-        case 2:
-          return kAvailableColor;
-        default:
-          return kBlackColor;
+      if (!isAvailable) {
+        return kUnavailableColor;
+      } else {
+        return kPrimaryColor;
       }
     }
 
     child() {
-      switch (status) {
-        case 0:
-          return Center(
-            child: Text(
-              name,
-              style: blackTextstyle.copyWith(
-                fontWeight: semiBold,
-              ),
+      if (isSelected) {
+        return Center(
+          child: Text(
+            name,
+            style: whiteTextstyle.copyWith(
+              fontWeight: semiBold,
             ),
-          );
-        case 1:
-          return Center(
-            child: Text(
-              name,
-              style: blueTextstyle.copyWith(
-                fontWeight: semiBold,
-              ),
+          ),
+        );
+      } else {
+        return Center(
+          child: Text(
+            name,
+            style: blackTextstyle.copyWith(
+              fontWeight: semiBold,
             ),
-          );
-        case 2:
-          return Center(
-            child: Text(
-              name,
-              style: blackTextstyle.copyWith(
-                fontWeight: semiBold,
-              ),
-            ),
-          );
-        default:
-          return Center(
-            child: Text(
-              name,
-              style: blackTextstyle.copyWith(
-                fontWeight: semiBold,
-              ),
-            ),
-          );
+          ),
+        );
       }
     }
 
-    return Container(
-      margin: EdgeInsets.only(left: 20),
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        color: kBackgroundColor(),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: borderColor(),
-          width: 2,
+    return GestureDetector(
+      onTap: () {
+        if (isAvailable) {
+          context.read<SizeCubit>().selesctSize(id);
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 20),
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          color: kBackgroundColor(),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: borderColor(),
+            width: 2,
+          ),
         ),
+        child: child(),
       ),
-      child: child(),
     );
   }
 }

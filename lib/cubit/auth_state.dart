@@ -17,16 +17,14 @@ class AuthSuccess extends AuthState {
   AuthSuccess(this.user);
 
   @override
-  // TODO: implement props
   List<Object> get props => [user];
 }
 
 class AuthFailed extends AuthState {
-  final UserModel error;
+  final String error;
 
   AuthFailed(this.error);
 
   @override
-  // TODO: implement props
   List<Object> get props => [error];
 }

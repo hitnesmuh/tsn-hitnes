@@ -9,6 +9,7 @@ Color kBackgroundColor = const Color(0xffFAFAFA);
 Color kBlackColor = const Color(0xff1F1449);
 Color kWhiteColor = const Color(0xffFFFFFF);
 Color kGreyColor = const Color(0xff9698A9);
+Color kRedColor = const Color(0xffEB70A5);
 Color kTransparentColor = Colors.transparent;
 Color kAvailableColor = Color(0xffE0D9FF);
 Color kUnavailableColor = Color(0xffEBECF1);

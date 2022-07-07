@@ -1,32 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:tsn_technical_hitnes/models/keranjang_model.dart';
+import 'package:tsn_technical_hitnes/models/product_model.dart';
 import 'package:tsn_technical_hitnes/shared/theme.dart';
-import 'package:tsn_technical_hitnes/ui/pages/detail_product_page.dart';
 
 class ProductTile extends StatelessWidget {
-  final String name;
-  final String size;
-  final String price;
-  final String imageUrl;
+  final KeranjangModel keranjang;
 
-  const ProductTile({
+  const ProductTile(
+    this.keranjang, {
     Key? key,
-    required this.name,
-    required this.size,
-    required this.price,
-    required this.imageUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailProductPage(),
-          ),
-        );
-      },
+    return Container(
       child: Container(
         margin: EdgeInsets.only(
           top: 20,
@@ -49,8 +37,8 @@ class ProductTile extends StatelessWidget {
               margin: EdgeInsets.only(right: 16),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(
-                    imageUrl,
+                  image: NetworkImage(
+                    keranjang.product.imageUrl,
                   ),
                 ),
               ),
@@ -60,7 +48,7 @@ class ProductTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    keranjang.product.name,
                     style: blackTextstyle.copyWith(
                       fontSize: 18,
                       fontWeight: semiBold,
@@ -70,14 +58,18 @@ class ProductTile extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    size,
+                    keranjang.selectedSize,
                     style: blackTextstyle.copyWith(fontWeight: light),
                   ),
                   SizedBox(
                     height: 5,
                   ),
                   Text(
-                    price,
+                    NumberFormat.currency(
+                      locale: 'id',
+                      symbol: 'Rp. ',
+                      decimalDigits: 0,
+                    ).format(keranjang.price),
                     style: blackTextstyle.copyWith(fontWeight: light),
                   ),
                 ],

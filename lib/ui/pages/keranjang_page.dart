@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:tsn_technical_hitnes/cubit/product_cubit.dart';
+import 'package:tsn_technical_hitnes/models/keranjang_model.dart';
+import 'package:tsn_technical_hitnes/models/product_model.dart';
 import 'package:tsn_technical_hitnes/shared/theme.dart';
 import 'package:tsn_technical_hitnes/ui/widget/product_tile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class KeranjangPage extends StatelessWidget {
-  const KeranjangPage({Key? key}) : super(key: key);
+  final KeranjangModel keranjang;
+
+  const KeranjangPage(this.keranjang, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +23,18 @@ class KeranjangPage extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    'assets/icon_arrow.png',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/shop');
+              },
+              child: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      'assets/icon_arrow.png',
+                    ),
                   ),
                 ),
               ),
@@ -58,28 +69,42 @@ class KeranjangPage extends StatelessWidget {
       );
     }
 
-    Widget productBasket() {
+    Widget productBasket(List<ProductModel> products) {
       return Container(
         child: Column(
-          children: [
-            ProductTile(
-              name: 'Kaos Biru Polos',
-              size: 'Size: M',
-              price: 'Rp. 100.000',
-              imageUrl: 'assets/image_blue_clothes.png',
-            ),
-          ],
+          children: products.map((ProductModel product) {
+            return ProductTile(keranjang);
+          }).toList(),
         ),
       );
     }
 
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      body: ListView(
-        children: [
-          header(),
-          productBasket(),
-        ],
+      body: BlocConsumer<ProductCubit, ProductState>(
+        listener: (context, state) {
+          if (state is ProductFailed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: kRedColor,
+                content: Text(state.error),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is ProductSuccess) {
+            return ListView(
+              children: [
+                header(),
+                productBasket(state.products),
+              ],
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }

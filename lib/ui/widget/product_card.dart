@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:tsn_technical_hitnes/models/product_model.dart';
 import 'package:tsn_technical_hitnes/shared/theme.dart';
 import 'package:tsn_technical_hitnes/ui/pages/detail_product_page.dart';
 
 class ProductCard extends StatelessWidget {
-  final String name;
-  final String price;
-  final String imageUrl;
+  final ProductModel product;
 
-  const ProductCard({
+  const ProductCard(
+    this.product, {
     Key? key,
-    required this.name,
-    required this.price,
-    required this.imageUrl,
   }) : super(key: key);
 
   get defaultMargin => null;
@@ -23,7 +21,7 @@ class ProductCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailProductPage(),
+            builder: (context) => DetailProductPage(product),
           ),
         );
       },
@@ -33,22 +31,28 @@ class ProductCard extends StatelessWidget {
         margin: EdgeInsets.only(
           left: 24,
         ),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(defaultRadius),
           color: kWhiteColor,
+          boxShadow: [
+            BoxShadow(
+              color: kGreyColor.withOpacity(0.2),
+              blurRadius: 10,
+            ),
+          ],
         ),
         child: Column(
           children: [
             Container(
-              width: 60,
+              width: 140,
               height: 200,
               margin: EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(defaultRadius),
                 image: DecorationImage(
-                  image: AssetImage(
-                    imageUrl,
+                  image: NetworkImage(
+                    product.imageUrl,
                   ),
                 ),
               ),
@@ -59,7 +63,7 @@ class ProductCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    product.name,
                     style: blackTextstyle.copyWith(
                       fontSize: 18,
                       fontWeight: medium,
@@ -69,7 +73,11 @@ class ProductCard extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    price,
+                    NumberFormat.currency(
+                      locale: 'id',
+                      symbol: 'Rp. ',
+                      decimalDigits: 0,
+                    ).format(product.price),
                     style: blackTextstyle.copyWith(
                       fontWeight: light,
                     ),

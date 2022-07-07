@@ -1,13 +1,19 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:tsn_technical_hitnes/cubit/product_cubit.dart';
+import 'package:tsn_technical_hitnes/cubit/size_cubit.dart';
+import 'package:tsn_technical_hitnes/models/keranjang_model.dart';
+import 'package:tsn_technical_hitnes/models/product_model.dart';
 import 'package:tsn_technical_hitnes/shared/theme.dart';
 import 'package:tsn_technical_hitnes/ui/pages/keranjang_page.dart';
 import 'package:tsn_technical_hitnes/ui/widget/custom_button.dart';
 import 'package:tsn_technical_hitnes/ui/widget/sizes_items.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailProductPage extends StatelessWidget {
-  const DetailProductPage({Key? key}) : super(key: key);
+  final ProductModel product;
+
+  const DetailProductPage(this.product, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +27,23 @@ class DetailProductPage extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    'assets/icon_arrow.png',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/shop');
+              },
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/shop');
+                },
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'assets/icon_arrow.png',
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -46,13 +62,18 @@ class DetailProductPage extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    'assets/icon_basket.png',
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/keranjang');
+              },
+              child: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      'assets/icon_basket.png',
+                    ),
                   ),
                 ),
               ),
@@ -75,8 +96,8 @@ class DetailProductPage extends StatelessWidget {
                   height: 334,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(
-                        'assets/image_blue_clothes.png',
+                      image: NetworkImage(
+                        product.imageUrl,
                       ),
                     ),
                   ),
@@ -89,7 +110,7 @@ class DetailProductPage extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(left: defaultMargin),
                   child: Text(
-                    'Kaos Biru Polos',
+                    product.name,
                     style: blackTextstyle.copyWith(
                       fontSize: 18,
                       fontWeight: semiBold,
@@ -107,7 +128,11 @@ class DetailProductPage extends StatelessWidget {
                     top: 10,
                   ),
                   child: Text(
-                    'Rp. 100.000',
+                    NumberFormat.currency(
+                      locale: 'id',
+                      symbol: 'Rp. ',
+                      decimalDigits: 0,
+                    ).format(product.price),
                     style: blackTextstyle.copyWith(
                       fontSize: 16,
                       fontWeight: medium,
@@ -226,19 +251,20 @@ class DetailProductPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizeItem(
-                    status: 0,
+                    id: 'S',
+                    isAvailable: false,
                     name: 'S',
                   ),
                   SizeItem(
-                    status: 1,
+                    id: 'M',
                     name: 'M',
                   ),
                   SizeItem(
-                    status: 2,
+                    id: 'L',
                     name: 'L',
                   ),
                   SizeItem(
-                    status: 2,
+                    id: 'XL',
                     name: 'XL',
                   ),
                 ],
@@ -250,20 +276,30 @@ class DetailProductPage extends StatelessWidget {
     }
 
     Widget button() {
-      return CustomButton(
-        margin: EdgeInsets.only(
-          left: defaultMargin,
-          right: defaultMargin,
-          top: 80,
-          bottom: 30,
-        ),
-        title: 'Tambah Keranjang',
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => KeranjangPage(),
+      return BlocBuilder<SizeCubit, List<String>>(
+        builder: (context, state) {
+          return CustomButton(
+            margin: EdgeInsets.only(
+              left: defaultMargin,
+              right: defaultMargin,
+              top: 80,
+              bottom: 30,
             ),
+            title: 'Tambah Keranjang',
+            onPressed: () {
+              //int price = product.price = state.length;
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => KeranjangPage(KeranjangModel(
+                    product: product,
+                    selectedSize: state.join(', '),
+                    price: product.price,
+                  )),
+                ),
+              );
+            },
           );
         },
       );
